@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "elorace"
+version = "0.1.0"
+description = ""
+authors = ["Eduardo Bachmann Frey <eduardo.bachmann.f@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.10"
+uvicorn = "^0.34.0"
+sqlalchemy = "^2.0.38"
+pydantic = "^2.10.6"
+discord = "^2.3.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
