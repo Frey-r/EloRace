@@ -1,10 +1,10 @@
 import discord_layer
-import logger_config
+from elorace.logger_config import get_logger
 from dotenv import load_dotenv
 import os
 
 
-logger = logger_config.get_logger(__name__)
+logger = get_logger(__name__)
 load_dotenv()
 
 if __name__ == "__main__":

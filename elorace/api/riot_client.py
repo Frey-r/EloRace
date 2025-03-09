@@ -2,10 +2,10 @@ import requests
 from dotenv import load_dotenv
 import os
 import time
-import discord_layer.logger_config as logger_config
+from elorace.logger_config import get_logger
 
 
-logger = logger_config.get_logger(__name__)
+logger = get_logger(__name__)
 load_dotenv()
 
 class RiotClient:
