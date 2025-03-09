@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from logger_config import get_logger
+from elorace.logger_config import get_logger
 
 logger = get_logger(__name__)
 

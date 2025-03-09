@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from models import player as player_model, summoner as summoner_model
 from schemas import PlayerCreate, PlayerResponse, PlayerBase
 from database import SessionLocal
-from logger_config import get_logger
+from elorace.logger_config import get_logger
 import datetime
 
 logger = get_logger(__name__)

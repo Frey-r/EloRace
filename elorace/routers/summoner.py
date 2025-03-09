@@ -19,17 +19,17 @@ def get_db():
         yield db
     finally:
         db.close()
-
 @router.post("/register", response_model=SummonerResponse)
 def register_summoner(summoner_data: SummonerCreate, db: Session = Depends(get_db)):
     # Verificar si existe
+    logger.info(f"Registering summoner {summoner_data.name} - {summoner_data.name_code}")
     db_summoner = db.query(summoner_model).filter(
         (summoner_model.name == summoner_data.name) & 
         (summoner_model.name_code == summoner_data.name_code)
     ).first()
     
     if db_summoner:
-        logger("Summoner already exists")
+        logger.info("Summoner already exists")
         raise HTTPException(status_code=400, detail="Summoner already exists")
     
     new_summoner = summoner_model(
@@ -43,7 +43,7 @@ def register_summoner(summoner_data: SummonerCreate, db: Session = Depends(get_d
         created_at=datetime.datetime.now(),
         updated_at=datetime.datetime.now()
     )
-    
+
     try:
         db.add(new_summoner)
         db.commit()
