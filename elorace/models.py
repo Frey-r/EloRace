@@ -6,6 +6,7 @@ class summoner(Base):
     __tablename__ = 'summoners'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    puuid = Column(String(50))
     name = Column(String(50))
     name_code = Column(String(5))
     region_id = Column(Integer, ForeignKey('region.id'))

@@ -11,10 +11,10 @@ load_dotenv()
 class RiotClient:
     def __init__(self):
         logger.info("Creating Riot client")
-        self.base_url = "https://developer.riotgames.com/apis#"
+        self.base_url = "https://americas.api.riotgames.com/riot/"
         self.token = os.getenv("RIOTAPITOKEN")
         self.headers = {
-            "Authorization": f"Bearer {self.token}"
+            "X-Riot-Token": self.token
         }
         self.rate_limits = {
             "requests": [],
@@ -41,22 +41,4 @@ class RiotClient:
         if len(recent_requests) >= self.rate_limits["max_per_second"]:
             logger.info(f"Rate limit exceeded, sleeping for 1 second")
             time.sleep(1)
-
-    def get(self, endpoint: str, params: dict = None):
-        """Realiza una solicitud GET a la API de Riot"""
-        logger.info(f"Requesting {endpoint}")
-        self._check_rate_limit()
-        url = f"{self.base_url}{endpoint}"
-        
-        response = requests.get(url, headers=self.headers, params=params)
-        self.rate_limits["requests"].append(time.time())
-        
-        if response.status_code == 200:
-            logger.info(f"{response.status_code} - {response.json()}")
-            return response.json()
-        elif response.status_code == 429:
-            retry_after = int(response.headers.get("Retry-After", 1))
-            time.sleep(retry_after)
-            return self.get(endpoint, params)  # Reintentar
-        else:
-            return None
+            
