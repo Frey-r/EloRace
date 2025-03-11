@@ -70,6 +70,8 @@ def update_current_elo(summoner_data:EloUpdate , db: Session = Depends(get_db)):
     if not db_summoner:
         raise HTTPException(status_code=404, detail="Summoner not found")
     db_summoner.current_elo = get_summoner_elo(summoner_name=summoner_data.name, summoner_name_code=summoner_data.name_code)
+    if db_summoner.current_elo>db_summoner.higest_elo:
+        db_summoner.higest_elo = db_summoner.current_elo
     db_summoner.updated_at = datetime.now()
     try:
         db.commit()
