@@ -11,7 +11,8 @@ load_dotenv()
 class RiotClient:
     def __init__(self):
         logger.info("Creating Riot client")
-        self.base_url = "https://americas.api.riotgames.com/riot/"
+        self.base_url_americas = "https://americas.api.riotgames.com/riot/"
+        self.base_url_las2 = "https://la2.api.riotgames.com/"
         self.token = os.getenv("RIOTAPITOKEN")
         self.headers = {
             "X-Riot-Token": self.token

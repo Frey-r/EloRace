@@ -4,6 +4,7 @@ from database import Base
 
 class summoner(Base):
     __tablename__ = 'summoners'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     puuid = Column(String(50))
@@ -19,6 +20,7 @@ class summoner(Base):
 
 class player(Base):
     __tablename__ = 'players'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50))
@@ -28,6 +30,7 @@ class player(Base):
 
 class region(Base):
     __tablename__ = 'region'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50))
@@ -35,6 +38,7 @@ class region(Base):
 
 class race(Base):
     __tablename__ = 'races'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50))
@@ -45,6 +49,7 @@ class race(Base):
 
 class archivement_summoner(Base):
     __tablename__ = 'archivement_races'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_summoner = Column(Integer, ForeignKey('summoners.id'))
@@ -54,8 +59,18 @@ class archivement_summoner(Base):
 
 class achievment(Base):
     __tablename__ = 'achievments'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50))
     created_at = Column(Date)
     updated_at = Column(Date)
+
+class elos(Base):
+    __tablename__ = 'elos'
+    __table_args__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    tier = Column(String(10))
+    rank = Column(String(3))
+    elo = Column(Integer)

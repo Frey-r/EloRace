@@ -20,6 +20,7 @@ def get_db():
         yield db
     finally:
         db.close()
+        
 @router.post("/register", response_model=SummonerResponse)
 def register_summoner(summoner_data: SummonerCreate, db: Session = Depends(get_db)):
     # Verificar si existe

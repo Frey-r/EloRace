@@ -50,7 +50,6 @@ class EloRaceBot(commands.Bot):
             await ctx.send(f"An error occurred: {str(error)}")
 
 async def main():
-    # Crear y validar configuración
     config = Config()
     try:
         config.validate_config()
@@ -58,7 +57,6 @@ async def main():
         logger.error(f"Configuration error: {e}")
         return
 
-    # Crear y ejecutar bot
     bot = EloRaceBot(config)
     try:
         async with bot:
