@@ -70,6 +70,8 @@ def get_summoner_elo(summoner_puuid=None, summoner_name=None, summoner_name_code
                 ).first()
                 summoner_elo = int(summoner_elo_base.elo) + int(summoner_elo_solo["leaguePoints"])
                 db_summoner.current_elo = summoner_elo
+                if summoner_elo>db_summoner.higest_elo:
+                    db_summoner.higest_elo = summoner_elo
                 try:
                     db.commit()
                     db.refresh(db_summoner)
