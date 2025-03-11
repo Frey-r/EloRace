@@ -4,8 +4,8 @@ from models import summoner as summoner_model
 from schemas import SummonerCreate, SummonerResponse, SummonerUpdate, EloUpdate, SummonerBase
 from database import SessionLocal
 from logger_config import get_logger
-from riot_api.summoner import get_summoner_uid
-import datetime
+from riot_api.summoner import get_summoner_uid, get_summoner_elo
+from datetime import datetime
 
 logger = get_logger(__name__)
 
@@ -64,15 +64,18 @@ def register_summoner(summoner_data: SummonerCreate, db: Session = Depends(get_d
 @router.post("/current_elo", response_model=SummonerResponse)
 def update_current_elo(summoner_data:EloUpdate , db: Session = Depends(get_db)):
     db_summoner = db.query(summoner_model).filter(
-        summoner_model.id == summoner_data.id
+        (summoner_model.name == summoner_data.name) &
+        (summoner_model.name_code == summoner_data.name_code)
     ).first()
     if not db_summoner:
         raise HTTPException(status_code=404, detail="Summoner not found")
-    db_summoner.current_elo = summoner_data.current_elo
+    db_summoner.current_elo = get_summoner_elo(summoner_name=summoner_data.name, summoner_name_code=summoner_data.name_code)
     db_summoner.updated_at = datetime.now()
     try:
         db.commit()
         db.refresh(db_summoner)
+        logger.info(f"Summoner {db_summoner.name} updated successfully")
+        return db_summoner
     except Exception as e:
         db.rollback()
         raise HTTPException(

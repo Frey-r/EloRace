@@ -7,7 +7,7 @@ class summoner(Base):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    puuid = Column(String(50))
+    puuid = Column(String(100))
     name = Column(String(50))
     name_code = Column(String(5))
     region_id = Column(Integer, ForeignKey('region.id'))

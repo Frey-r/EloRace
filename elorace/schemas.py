@@ -33,12 +33,13 @@ class SummonerUpdate(BaseModel):
     region_id: Optional[int] = Field(default=None)
     player_id: Optional[int] = Field(default=None)
     race_id: Optional[int] = Field(default=None)
+    puuid: Optional[str] = Field(default=None)
     current_elo: Optional[int] = Field(default=None)
     higest_elo: Optional[int] = Field(default=None)
 
 class EloUpdate(BaseModel):
-    id: int
-    current_elo: int
+    name: str
+    name_code: str
 
 
 #PLAYER SCHEMAS
