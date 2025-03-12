@@ -34,7 +34,10 @@ def register_player(player_data: PlayerCreate, db: Session = Depends(get_db)):
     
     new_player = player_model(
         name=player_data.name,
-        correo=player_data.correo
+        source_id=player_data.source_id,
+        source=player_data.source,
+        created_at=datetime.now(),
+        updated_at=datetime.now()
     )
 
     try:
