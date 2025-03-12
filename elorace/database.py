@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from elorace.logger_config import get_logger
+import elorace.models
+
 
 logger = get_logger(__name__)
 
@@ -8,15 +10,14 @@ class Base(DeclarativeBase):
     pass
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./elo_race.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def check_and_update_tables():
     logger.info("Checking database schema for updates")
     inspector = inspect(engine)
     
-    try:
-        import models  
+    try:  
         defined_tables = Base.metadata.tables
         
         with engine.connect() as connection: 
@@ -52,6 +53,7 @@ def check_and_update_tables():
     except Exception as e:
         logger.error(f"Error updating database schema: {str(e)}")
         raise Exception(f"Error updating database schema: {str(e)}")
+
 
 def constant_tables():
     logger.info("Checking and populating constant tables")
@@ -161,3 +163,7 @@ def constant_tables():
         logger.error(f"Error checking/populating constant tables: {str(e)}")
     finally:
         db.close()
+
+
+if __name__ == "__main__":
+    check_and_update_tables()

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models import player as player_model, summoner as summoner_model
-from schemas import PlayerCreate, PlayerResponse, PlayerBase
-from database import SessionLocal
+from elorace.models import player as player_model, summoner as summoner_model
+from elorace.schemas import PlayerCreate, PlayerResponse, PlayerBase
+from elorace.database import SessionLocal
 from elorace.logger_config import get_logger
-import datetime
+from datetime import datetime
 
 logger = get_logger(__name__)
 
@@ -24,7 +24,8 @@ def get_db():
 def register_player(player_data: PlayerCreate, db: Session = Depends(get_db)):
     db_player = db.query(player_model).filter(
         (player_model.name == player_data.name) & 
-        (player_model.correo == player_data.correo)
+        (player_model.source == player_data.source) &
+        (player_model.source_id == player_data.source_id)
     ).first()
     
     if db_player:
@@ -33,7 +34,7 @@ def register_player(player_data: PlayerCreate, db: Session = Depends(get_db)):
     
     new_player = player_model(
         name=player_data.name,
-        correo=player_data.mail
+        correo=player_data.correo
     )
 
     try:

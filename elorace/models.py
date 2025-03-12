@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey, Boolean
-from database import Base
+from elorace.database import Base
 
 
 class summoner(Base):
@@ -24,7 +24,8 @@ class player(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50))
-    correo = Column(String(50))
+    source_id = Column(String(100))
+    source = Column(String(50))
     created_at = Column(Date)
     updated_at = Column(Date)
 

@@ -4,6 +4,8 @@ from elorace.logger_config import get_logger
 from dotenv import load_dotenv
 from config import Config
 import os
+import sys
+
 
 logger = get_logger(__name__)
 load_dotenv()
@@ -20,10 +22,12 @@ class EloRaceBot(commands.Bot):
     async def setup_hook(self):
         """Se ejecuta antes de que el bot se conecte"""
         logger.info("Setting up bot...")
-        # Aquí cargarías tus cogs/extensiones
-        # await self.load_extension("cogs.admin")
-        # await self.load_extension("cogs.player")
-        # await self.load_extension("cogs.matches")
+        try:
+            await self.load_extension("discord_layer.cogs.player")
+            logger.info("Player cog loaded successfully")
+        except Exception as e:
+            logger.error(f"Error loading player cog: {e}")
+            raise
         
     async def on_ready(self):
         """Se ejecuta cuando el bot está conectado y listo"""
@@ -31,11 +35,13 @@ class EloRaceBot(commands.Bot):
         logger.info(f"Bot ID: {self.user.id}")
         logger.info(f"Discord API version: {discord.__version__}")
         
-        # Establecer estado del bot
+        await self.tree.sync()
+        logger.info("Slash commands synced")
+        
         await self.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.watching,
-                name="!help for commands"
+                name="/help for commands"
             )
         )
         

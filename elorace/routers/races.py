@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models import race as race_model
-from schemas import RaceCreate, RaceResponse, RaceBase, RaceList, RaceResponse
-from database import SessionLocal
+from elorace.models import race as race_model
+from elorace.schemas import RaceCreate, RaceResponse, RaceBase, RaceList, RaceResponse
+from elorace.database import SessionLocal
 from elorace.logger_config import get_logger
 from datetime import datetime
 

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models import summoner as summoner_model
-from schemas import SummonerCreate, SummonerResponse, SummonerUpdate, EloUpdate, SummonerBase
-from database import SessionLocal
-from logger_config import get_logger
+from elorace.models import summoner as summoner_model
+from elorace.schemas import SummonerCreate, SummonerResponse, SummonerUpdate, EloUpdate, SummonerBase
+from elorace.database import SessionLocal
+from elorace.logger_config import get_logger
 from riot_api.summoner import get_summoner_uid, get_summoner_elo
 from datetime import datetime
 

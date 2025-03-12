@@ -5,6 +5,7 @@ from typing import List, Optional
 
 #SUMMONER SCHEMAS
 class SummonerBase(BaseModel):
+    puuid : Optional[str] = Field(default=None)
     name : str
     name_code : str
     region_id : int
@@ -17,7 +18,6 @@ class SummonerCreate(SummonerBase):
     higest_elo : int = Field(default=0)
     created_at : datetime = Field(default_factory=datetime.now)
 
-
 class SummonerResponse(SummonerBase):
     current_elo: int
     higest_elo: int
@@ -25,8 +25,8 @@ class SummonerResponse(SummonerBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True  # Permite convertir modelos SQLAlchemy a Pydantic
-
+        orm_mode = True 
+        
 class SummonerUpdate(BaseModel):
     name: Optional[str] = Field(default=None)
     name_code: Optional[str] = Field(default=None)
@@ -37,19 +37,15 @@ class SummonerUpdate(BaseModel):
     current_elo: Optional[int] = Field(default=None)
     higest_elo: Optional[int] = Field(default=None)
 
-class EloUpdate(BaseModel):
-    name: str
-    name_code: str
-
-
 #PLAYER SCHEMAS
 class PlayerBase(BaseModel):
     name : str
-    correo : Optional[str] = Field(default=None)
-    updated_at : datetime = Field(default_factory=datetime.now)
+    source_id : Optional[str] = Field(default=None)
+    source : Optional[str] = Field(default='API')
+    updated_at : Optional[datetime] = Field(default_factory=datetime.now)
 
 class PlayerCreate(PlayerBase):
-    created_at : datetime = Field(default_factory=datetime.now)
+    created_at : Optional[datetime] = Field(default_factory=datetime.now)
 
 class PlayerResponse(PlayerBase):
     created_at: datetime 
@@ -84,4 +80,8 @@ class RaceList(BaseModel):
     races: list[str]
     class Config:
         orm_mode = True
+
+class EloUpdate(BaseModel):
+    name: str
+    name_code: str
 
