@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from elorace.logger_config import get_logger
-import elorace.models
 
 
 logger = get_logger(__name__)
@@ -10,15 +9,23 @@ class Base(DeclarativeBase):
     pass
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./elo_race.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
+#engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_all_models():
+    """Retorna todas las clases de modelo definidas."""
+    from elorace.models import summoner, player, region, race, archivement_summoner, achievment, elos
+    return [summoner, player, region, race, archivement_summoner, achievment, elos]
+
 
 def check_and_update_tables():
     logger.info("Checking database schema for updates")
     inspector = inspect(engine)
     
     try:  
-        defined_tables = Base.metadata.tables
+        models = get_all_models()
+        defined_tables = {model.__tablename__: model.__table__ for model in models}
         
         with engine.connect() as connection: 
             for table_name, table in defined_tables.items():
