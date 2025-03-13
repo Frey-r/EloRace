@@ -37,6 +37,10 @@ class SummonerUpdate(BaseModel):
     current_elo: Optional[int] = Field(default=None)
     higest_elo: Optional[int] = Field(default=None)
 
+class EloUpdate(BaseModel):
+    name: str
+    name_code: str
+
 #PLAYER SCHEMAS
 class PlayerBase(BaseModel):
     name : str
@@ -58,6 +62,9 @@ class PlayerResponse(PlayerBase):
 class RaceBase(BaseModel):
     name : str
     objective : int
+    is_active : Optional[bool] = Field(default=True)
+    owner : Optional[int] = Field(default=None)
+    created_at : datetime
     updated_at : datetime = Field(default_factory=datetime.now)
 
 class RaceCreate(RaceBase):
@@ -80,8 +87,3 @@ class RaceList(BaseModel):
     races: list[str]
     class Config:
         orm_mode = True
-
-class EloUpdate(BaseModel):
-    name: str
-    name_code: str
-

@@ -15,8 +15,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_all_models():
     """Retorna todas las clases de modelo definidas."""
-    from elorace.models import summoner, player, region, race, archivement_summoner, achievment, elos
-    return [summoner, player, region, race, archivement_summoner, achievment, elos]
+    from elorace.models import summoner, player, region, race, archivement_player, achievment, elos
+    return [summoner, player, region, race, archivement_player, achievment, elos]
 
 
 def check_and_update_tables():

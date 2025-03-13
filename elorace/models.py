@@ -42,14 +42,15 @@ class race(Base):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    owner = Column(Integer, ForeignKey('players.id'))
     name = Column(String(50))
     objective = Column(String(50))
     is_active = Column(Boolean)
     created_at = Column(Date)
     updated_at = Column(Date)
 
-class archivement_summoner(Base):
-    __tablename__ = 'archivement_races'
+class archivement_player(Base):
+    __tablename__ = 'archivement_player'
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
