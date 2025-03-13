@@ -7,6 +7,7 @@ from elorace.database import SessionLocal
 from elorace.models import race as race_model, summoner as summoner_model, player as player_model
 from elorace.schemas import RaceCreate, RaceUpdate, RaceList, EloUpdate, EloRaceBase
 from riot_api.summoner import get_summoner_elo
+from discord_layer.views.embeds import create_race_embed, race_state_embed
 from datetime import datetime
 
 
@@ -57,7 +58,7 @@ class RaceCommands(commands.Cog):
             db.commit()
             db.refresh(new_race)
             logger.info(f"Race {new_race.name} registered successfully")
-            await interaction.response.send_message(f"Race {new_race.name} registered successfully")
+            await interaction.response.send_modal(create_race_embed(new_race,interaction.user.avatar_url))
             await self.join_race(interaction, new_race.name)
             return
         
