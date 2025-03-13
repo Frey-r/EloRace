@@ -41,6 +41,9 @@ class EloUpdate(BaseModel):
     name: str
     name_code: str
 
+class EloRaceBase(BaseModel):
+    base_race_elo: int
+
 #PLAYER SCHEMAS
 class PlayerBase(BaseModel):
     name : str

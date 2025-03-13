@@ -15,6 +15,7 @@ class summoner(Base):
     race_id = Column(Integer, ForeignKey('races.id'))
     current_elo = Column(Integer)
     higest_elo = Column(Integer)
+    base_race_elo = Column(Integer)
     created_at = Column(Date)
     updated_at = Column(Date)
 
