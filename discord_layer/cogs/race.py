@@ -59,3 +59,6 @@ class RaceCommands(commands.Cog):
             logger.info(f"Race {new_race.name} registered successfully")
             await interaction.response.send_message(f"Race {new_race.name} registered successfully")
             return
+
+async def setup(bot): 
+    await bot.add_cog(RaceCommands(bot))

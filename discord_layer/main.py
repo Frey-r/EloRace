@@ -27,6 +27,8 @@ class EloRaceBot(commands.Bot):
             logger.info("Summoner cog loaded successfully")
             await self.load_extension("discord_layer.cogs.player")
             logger.info("Player cog loaded successfully")
+            await self.load_extension("discord_layer.cogs.race")
+            logger.info("Race cog loaded successfully")
         except Exception as e:
             logger.error(f"Error loading player cog: {e}")
             raise
