@@ -36,7 +36,7 @@ class SummonerCommands(commands.Cog):
             ).first()
             if not db_player:
                 logger.error("Player not found")
-                await interaction.response.send_message("you need being registered as a player to register a summoner, try /register instead")
+                await interaction.response.send_message("you need being registered as a player to register a summoner, try /join instead")
                 return
             db_summoner = db.query(summoner_model).filter(
                 (summoner_model.name == summoner_name)
