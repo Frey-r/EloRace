@@ -76,9 +76,6 @@ class SummonerCommands(commands.Cog):
                     logger.info(f"Summoner {new_summoner.name} ELO updated to {summoner_elo}")
                     await interaction.response.send_message(f"Summoner successfully updated")
                     return
-                logger.error(f"Summoner {summoner_name} not found in RIOT")
-                await interaction.response.send_message(f"Summoner {summoner_name} not found in RIOT")
-                return
             except Exception as e:
                 db.rollback()
                 logger.error(f"Error registering summoner: {str(e)}")
