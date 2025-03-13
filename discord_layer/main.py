@@ -23,6 +23,8 @@ class EloRaceBot(commands.Bot):
         """Se ejecuta antes de que el bot se conecte"""
         logger.info("Setting up bot...")
         try:
+            await self.load_extension("discord_layer.cogs.summoner")
+            logger.info("Summoner cog loaded successfully")
             await self.load_extension("discord_layer.cogs.player")
             logger.info("Player cog loaded successfully")
         except Exception as e:

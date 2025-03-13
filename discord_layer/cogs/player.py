@@ -5,7 +5,7 @@ from typing import Optional
 from elorace.logger_config import get_logger
 from elorace.database import SessionLocal
 from elorace.models import player as player_model
-from elorace.schemas import PlayerCreate
+from datetime import datetime
 
 
 logger = get_logger(__name__)
@@ -32,26 +32,26 @@ class PlayerCommands(commands.Cog):
                 logger.info("Player already exists")
                 await interaction.response.send_message("Player already exists")
                 return
+            new_player = player_model(
+                name=player_user,
+                source_id=player_source_id,
+                source=player_source,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            )
+            try:
+                db.add(new_player)
+                db.commit()
+                db.refresh(new_player)
+                logger.info(f"Player {new_player.name} registered successfully")
+                await interaction.response.send_message(f"Player {new_player.name} registered successfully")
+                return
+            except Exception as e:
+                db.rollback()
+                logger.error(f"Error registering player: {str(e)}")
+                await interaction.response.send_message(f"Error registering player: {str(e)}")
+                return
             
-
-    
-    @app_commands.command(name="register_invocator", description="Register a summoner")
-    @app_commands.describe(
-        summoner_name="Summoner name",
-        summoner_name_code="Region code without '#' (e.g., LAS)",
-    )
-    async def register_summoner(
-        self, 
-        interaction: discord.Interaction, 
-        summoner_name: str, 
-        summoner_name_code: str
-    ):
-        await interaction.response.send_message(
-            f"Registering summoner {summoner_name}#{summoner_name_code}...",
-            ephemeral=True
-        )
-        logger.info(f"Register summoner command called for {summoner_name}#{summoner_name_code}")
-
-async def setup(bot):  # Función necesaria para cargar el cog
+async def setup(bot): 
     await bot.add_cog(PlayerCommands(bot))
 
