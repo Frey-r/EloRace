@@ -58,7 +58,7 @@ class RaceCommands(commands.Cog):
             db.commit()
             db.refresh(new_race)
             logger.info(f"Race {new_race.name} registered successfully")
-            await interaction.response.send_modal(create_race_embed(new_race,interaction.user.avatar_url))
+            await interaction.response.send_message(embed=create_race_embed(new_race, interaction.user.display_avatar.url))
             await self.join_race(interaction, new_race.name)
             return
         
@@ -120,6 +120,107 @@ class RaceCommands(commands.Cog):
                 logger.error(f"Error registering summoner: {str(e)}")
                 await interaction.response.send_message(f"Error registering summoner")
                 return
+            
+    @app_commands.command(name="leave_race", description="Leave a race")
+    @app_commands.describe(
+        "leave you current race"
+    )
+    async def leave_race(
+        self, 
+        interaction: discord.Interaction
+    ):
+        logger.info(f"Leave race command called")
+        user_id = interaction.user.id
+        with SessionLocal() as db:
+            db_player = db.query(player_model).filter(
+                (player_model.source_id == user_id)
+                & (player_model.source == 'DISCORD')
+            ).first()
+            if not db_player:
+                logger.error("Player not found")
+                await interaction.response.send_message("you need being registered as a player to leave a race, try /join instead")
+                return
+            db_summoner = db.query(summoner_model).filter(
+                (summoner_model.player_id == db_player.id)
+            ).first()
+            if not db_summoner:
+                logger.error("Summoner not found")
+                await interaction.response.send_message("Summoner not found")
+                return
+            db_race = db.query(race_model).filter(
+                (race_model.id == db_player.race_id)
+            ).first()
+            if not db_race:
+                logger.error("Race not found")
+                await interaction.response.send_message("Race not found")
+                return
+            db_summoner.race_id = None
+            db_summoner.updated_at = datetime.now()
+            db.commit()
+            db.refresh(db_summoner)
+            logger.info(f"Summoner {db_summoner.name} successfully left race")
+            await interaction.response.send_message(f"Summoner successfully left race")
+            return
+        
+    @app_commands.command(name="leaderboard", description="Show leaderboard")
+    @app_commands.describe(
+        "show the leaderboard for your current race"
+    )
+    async def leaderboard(
+        self, 
+        interaction: discord.Interaction
+    ):
+        logger.info(f"Leaderboard command called")
+        user_id = interaction.user.id
+        with SessionLocal() as db:
+            db_player = db.query(player_model).filter(
+                (player_model.source_id == user_id)
+                & (player_model.source == 'DISCORD')
+            ).first()
+            if not db_player:
+                logger.error("Player not found")
+                await interaction.response.send_message("you need being registered as a player to see the leaderboard, try /join instead")
+                return
+            db_summoner = db.query(summoner_model).filter(
+                (summoner_model.player_id == db_player.id)
+            ).first()
+            if not db_summoner:
+                logger.error("Summoner not found")
+                await interaction.response.send_message("Summoner not found")
+                return
+            db_race = db.query(race_model).filter(
+                (race_model.id == db_summoner.race_id)
+            ).first()
+            if not db_race:
+                logger.error("Race not found")
+                await interaction.response.send_message("Race not found")
+                return
+            if db_race.is_active:
+                summoners = db.query(summoner_model).filter(
+                    (summoner_model.race_id == db_race.id)
+                ).all()
+                if not summoners:
+                    logger.error("Summoners not found")
+                    await interaction.response.send_message("Summoners not found")
+                    return
+                leaderboard = sorted(summoners, key=lambda x: x.current_elo, reverse=True)
+                embed = discord.Embed(
+                    title=f"Leaderboard for {db_race.name}",
+                    description=f"Current ELO: {db_summoner.current_elo}",
+                    color=0x00ff00
+                )
+                for i, summoner in enumerate(leaderboard):
+                    embed.add_field(
+                        name=f"{i+1}. {summoner.name}",
+                        value=f"ELO: {summoner.current_elo}",
+                        inline=False
+                    )
+                await interaction.response.send_message(embed=embed)
+                return
+            else:
+                await interaction.response.send_message("Race is not active")
+                return
+
     
 async def setup(bot): 
     await bot.add_cog(RaceCommands(bot))
