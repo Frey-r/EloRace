@@ -28,43 +28,56 @@ class RaceCommands(commands.Cog):
         race_name: str, 
         objective: int
     ):
+        # Primero, diferir la respuesta
+        await interaction.response.defer()
+
         logger.info(f"Register race command called for {race_name}")
         user_id = interaction.user.id
-        with SessionLocal() as db:
-            db_player = db.query(player_model).filter(
-                (player_model.source_id == user_id)
-                & (player_model.source == 'DISCORD')
-            ).first()
-            if not db_player:
-                logger.error("Player not found")
-                await interaction.response.send_message("you need being registered as a player to register a race, try /join instead")
-                return
-            db_race = db.query(race_model).filter(
-                (race_model.name == race_name)
-            ).first()
-            if db_race:
-                logger.info("Race already exists")
-                await interaction.response.send_message("Race already exists")
-                return
-            new_race = race_model(
-                name=race_name,
-                objective=objective,
-                owner=db_player.id,
-                is_active=True,
-                created_at=datetime.now(),
-                updated_at=datetime.now()
-            )
-            db.add(new_race)
-            db.commit()
-            db.refresh(new_race)
-            logger.info(f"Race {new_race.name} registered successfully")
-            embed = discord.Embed(
-                title=f"Race {new_race.name} created",
-                description=f"Objective ELO: {new_race.objective}\nTo win, you need to get {new_race.objective} of ELO, good luck! \nUse /join_race {new_race.name} to join the race",
-                color=0x00ff00
-            )
-            await interaction.response.send_message(embed=embed)
-            await self.join_race(interaction, new_race.name)
+
+        try:
+            with SessionLocal() as db:
+                db_player = db.query(player_model).filter(
+                    (player_model.source_id == user_id)
+                    & (player_model.source == 'DISCORD')
+                ).first()
+
+                if not db_player:
+                    logger.error("Player not found")
+                    await interaction.followup.send("you need being registered as a player to register a race, try /join instead")
+                    return
+
+                db_race = db.query(race_model).filter(
+                    (race_model.name == race_name)
+                ).first()
+
+                if db_race:
+                    logger.info("Race already exists")
+                    await interaction.followup.send("Race already exists")
+                    return
+
+                new_race = race_model(
+                    name=race_name,
+                    objective=objective,
+                    owner=db_player.id,
+                    is_active=True,
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
+                )
+                db.add(new_race)
+                db.commit()
+                db.refresh(new_race)
+
+                logger.info(f"Race {new_race.name} registered successfully")
+                embed = discord.Embed(
+                    title=f"Race {new_race.name} created",
+                    description=f"Objective ELO: {new_race.objective}\nTo win, you need to get {new_race.objective} of ELO, good luck! \nUse /join_race {new_race.name} to join the race",
+                    color=0x00ff00
+                )
+                await interaction.followup.send(embed=embed)
+
+        except Exception as e:
+            logger.error(f"Error creating race: {str(e)}")
+            await interaction.followup.send("An error occurred while creating the race")
             return
         
     @app_commands.command(name="join_race", description="Join a race")
