@@ -113,7 +113,7 @@ class RaceCommands(commands.Cog):
                     db.commit()
                     db.refresh(db_summoner)
                     logger.info(f"Summoner {db_summoner.name} ELO updated to {summoner_elo}")
-                    await interaction.response.send_message(f"Summoner successfully updated")
+                    await interaction.response.send_message(f"Summoner registered successfully, prepare to race!")
                     return
             except Exception as e:
                 db.rollback()
