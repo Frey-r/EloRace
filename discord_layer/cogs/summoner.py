@@ -19,7 +19,7 @@ class SummonerCommands(commands.Cog):
     @app_commands.command(name="new_summoner", description="Register a summoner")
     @app_commands.describe(
         summoner_name="Summoner name",
-        summoner_name_code="Region code without '#' (e.g., LAS)",
+        summoner_name_code="Player code without '#' (e.g., LAS)",
     )
     async def new_summoner(
         self, 
