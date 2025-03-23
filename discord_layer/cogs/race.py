@@ -58,7 +58,12 @@ class RaceCommands(commands.Cog):
             db.commit()
             db.refresh(new_race)
             logger.info(f"Race {new_race.name} registered successfully")
-            await interaction.response.send_message(embed=create_race_embed(new_race, interaction.user.display_avatar.url))
+            embed = discord.Embed(
+                title=f"Race {new_race.name} created",
+                description=f"Objective ELO: {new_race.objective}\nTo win, you need to get {new_race.objective} of ELO, good luck! \nUse /join_race {new_race.name} to join the race",
+                color=0x00ff00
+            )
+            await interaction.response.send_message(embed=embed)
             await self.join_race(interaction, new_race.name)
             return
         
