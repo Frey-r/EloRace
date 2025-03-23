@@ -200,7 +200,7 @@ class RaceCommands(commands.Cog):
                 leaderboard = sorted(summoners, key=lambda x: x.current_elo, reverse=True)
                 embed = discord.Embed(
                     title=f"Leaderboard for {db_race.name}",
-                    description=f"Current ELO: {db_summoner.current_elo}",
+                    description=f"Objective ELO: {db_race.objective}",
                     color=0x00ff00
                 )
                 for i, summoner in enumerate(leaderboard):
