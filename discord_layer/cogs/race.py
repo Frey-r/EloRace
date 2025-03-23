@@ -122,9 +122,6 @@ class RaceCommands(commands.Cog):
                 return
             
     @app_commands.command(name="leave_race", description="Leave a race")
-    @app_commands.describe(
-        "leave you current race"
-    )
     async def leave_race(
         self, 
         interaction: discord.Interaction
@@ -163,9 +160,6 @@ class RaceCommands(commands.Cog):
             return
         
     @app_commands.command(name="leaderboard", description="Show leaderboard")
-    @app_commands.describe(
-        "show the leaderboard for your current race"
-    )
     async def leaderboard(
         self, 
         interaction: discord.Interaction
